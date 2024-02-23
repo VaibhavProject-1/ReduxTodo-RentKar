@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update a todo
-router.patch('/:id', getTodo, async (req, res) => {
+router.put('/:id', getTodo, async (req, res) => {
   if (req.body.name != null) {
     res.todo.name = req.body.name;
   }
@@ -50,15 +50,40 @@ router.patch('/:id', getTodo, async (req, res) => {
   }
 });
 
-// Delete a todo
-router.delete('/:id', getTodo, async (req, res) => {
+// Update the completion status of a todo
+router.put('/:id/complete', getTodo, async (req, res) => {
   try {
-    await res.todo.remove();
-    res.json({ message: 'Todo deleted' });
+    // Set the completion status of the todo to true
+    res.todo.completed = true;
+
+    // Save the updated todo
+    const updatedTodo = await res.todo.save();
+
+    // Send back the updated todo as a JSON response
+    res.json(updatedTodo);
+  } catch (err) {
+    // If an error occurs, send back an error response
+    res.status(400).json({ message: err.message });
+  }
+});
+
+
+
+// Delete a todo
+router.delete('/:id', async (req, res) => {
+  try {
+    // sourcery skip: use-object-destructuring
+    const id = req.params.id;
+    const deletedTodo = await Todo.findByIdAndDelete(id);
+    if (!deletedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+    res.json({ message: 'Todo deleted', deletedTodo });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Middleware function to get a single todo by ID
 async function getTodo(req, res, next) {
