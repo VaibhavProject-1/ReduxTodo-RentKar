@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTodos, addTodo,addTodoAsync } from '../redux/actions/todoActions'; // Import the addTodo action creator
+import { fetchTodos ,addTodoAsync, deleteTodo, updateTodo, completeTodo  } from '../redux/actions/todoActions'; // Import the addTodo action creator
 import './TodoApp.css';
-import axios from 'axios';
 
 const TodoApp = () => {
   const dispatch = useDispatch();
@@ -16,16 +15,7 @@ const TodoApp = () => {
       try {
         // Dispatch the fetchTodos action
         dispatch(fetchTodos());
-
-        // Dispatch the fetchTodos action and await its completion
-        const action = dispatch(fetchTodos());
         
-        // Log the action (including its type and payload)
-        
-        // Once the action is dispatched and resolved, log a message or perform any other actions
-        console.log('Fetch Todos action dispatched successfully');
-        console.log('Fetch Todos action dispatched:', action);
-        console.log("Todos inside useEffect: ",todos);
       } catch (error) {
         // Handle any errors that occur during the action dispatch
         console.error('Error dispatching fetchTodos:', error.message);
@@ -36,17 +26,14 @@ const TodoApp = () => {
     fetchData();
   }, [dispatch]);
   
+  
 
-  // Log the current state of todos
-console.log("Todos outside useEffect: ",todos);
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      // Make an HTTP POST request to add the todo to the backend
-    //   const response = await axios.post('http://localhost:5000/api/todos', { name, description });
-      
-      // Dispatch the ADD_TODO action to add the todo to the Redux store
+     // Dispatch the ADD_TODO action to add the todo to the Redux store
       dispatch(addTodoAsync(name, description));
       
       // Reset the form fields
@@ -58,6 +45,58 @@ console.log("Todos outside useEffect: ",todos);
     }
   };
 
+  const handleCompleteTodo = async (id) => {
+    try {
+      // Dispatch the UPDATE_TODO action to mark the todo as completed
+      dispatch(completeTodo(id));
+
+      // After successful completion, re-fetch the todos
+      dispatch(fetchTodos());
+
+    } catch (error) {
+      // Handle errors (e.g., display an error message)
+      console.error('Error completing todo:', error.message);
+    }
+  };
+
+  const handleDeleteTodo = async (id) => {
+    try {
+      // Dispatch the DELETE_TODO action to delete the todo
+      dispatch(deleteTodo(id));
+
+      // After successful deletion, re-fetch the todos
+      dispatch(fetchTodos());
+
+
+    } catch (error) {
+      // Handle errors (e.g., display an error message)
+      console.error('Error deleting todo:', error.message);
+    }
+  };
+
+  const handleUpdateTodo = async (id) => {
+    try {
+      // Implement logic to get new name and description from user input, for example using prompt or a form
+      const newName = prompt('Enter new name:');
+      const newDescription = prompt('Enter new description:');
+  
+      if (newName !== null && newDescription !== null) {
+        // Dispatch the UPDATE_TODO action to update the todo
+        dispatch(updateTodo(id, newName, newDescription));
+
+        // After successful updation, re-fetch the todos
+        dispatch(fetchTodos());
+      } else {
+        // Handle empty input or cancelation
+        console.log('Name and description cannot be empty');
+      }
+    } catch (error) {
+      // Handle errors (e.g., display an error message)
+      console.error('Error updating todo:', error.message);
+    }
+  };
+
+ 
   
 
   return (
@@ -72,11 +111,12 @@ console.log("Todos outside useEffect: ",todos);
       </div>
       {Array.isArray(todos) && todos.length > 0 ? (
   todos.map((todo) => (
-    <div key={todo._id} className="todo-task">
+    <div key={todo._id} className={`todo-task ${todo.completed ? 'completed' : ''}`}>
       <h3>{todo.name}</h3>
       <p>{todo.description}</p>
-      <button>Complete</button>
-      <button>Delete</button>
+      <button onClick={() => handleCompleteTodo(todo._id)}>Complete</button>
+      <button onClick={() => handleUpdateTodo(todo._id)}>Update</button>
+      <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
     </div>
   ))
 ) : (
