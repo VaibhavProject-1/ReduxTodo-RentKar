@@ -13,9 +13,10 @@ const app = express();
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(`${process.env.MONGO_URL}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  dbName: 'todo',
 });
 
 // Middleware
