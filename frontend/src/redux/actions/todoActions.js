@@ -55,7 +55,7 @@ export const addTodoAsync = (name, description) => {
     return async (dispatch) => {
       try {
         // Make an HTTP POST request to add the todo to the backend
-        const response = await axios.post('http://localhost:5000/api/todos', { name, description });
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/todos`, { name, description });
         
         // Dispatch the addTodoSuccess action to add the todo to the Redux store
         dispatch(addTodoSuccess(response.data));
@@ -76,7 +76,7 @@ export const fetchTodos = () => {
     return async (dispatch) => {
       dispatch(fetchTodosRequest());
       try {
-        const response = await axios.get('http://localhost:5000/api/todos');
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/todos`);
         const todos = response.data; // Extract todos array from response
         // console.log(todos);
         dispatch(fetchTodosSuccess(todos));
@@ -90,7 +90,7 @@ export const fetchTodos = () => {
 export const addTodo = (todoData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/todos', todoData);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/todos`, todoData);
       dispatch(addTodoSuccess(response.data));
     } catch (error) {
       console.error('Error adding todo:', error.message);
@@ -103,7 +103,7 @@ export const deleteTodo = (id) => { // Define async action creator for deleting 
     return async (dispatch) => {
       try {
         // Make an HTTP DELETE request to delete the todo from the backend
-        await axios.delete(`http://localhost:5000/api/todos/${id}`);
+        await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/todos/${id}`);
         
         // Dispatch the deleteTodoSuccess action to delete the todo from the Redux store
         dispatch(deleteTodoSuccess(id));
@@ -123,7 +123,7 @@ export const deleteTodo = (id) => { // Define async action creator for deleting 
         console.log("New name:", newName);
         console.log("New description:", newDescription);
         // Make an HTTP PATCH request to mark the todo as completed in the backend
-        const response = await axios.put(`http://localhost:5000/api/todos/${id}`, { name: newName, description: newDescription });
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/todos/${id}`, { name: newName, description: newDescription });
         
         // Dispatch the updateTodoSuccess action to update the todo in the Redux store
         dispatch(updateTodoSuccess(response.data));
@@ -140,7 +140,7 @@ export const deleteTodo = (id) => { // Define async action creator for deleting 
 export const completeTodo = (id) => { // Define async action creator for completing a todo
     return async (dispatch) => {
       try {
-        await axios.put(`http://localhost:5000/api/todos/${id}/complete`, { completed: true }); // Assuming your backend expects a boolean value for completion
+        await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/todos/${id}/complete`, { completed: true }); // Assuming your backend expects a boolean value for completion
         dispatch(completeTodoSuccess(id));
       } catch (error) {
         console.error('Error completing todo:', error.message);

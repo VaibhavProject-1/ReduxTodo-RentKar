@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTodos ,addTodoAsync, deleteTodo, updateTodo, completeTodo  } from '../redux/actions/todoActions'; // Import the addTodo action creator
 import './TodoApp.css';
 import UpdateTodoModal from './UpdateTodoModal';
+console.log(process.env.REACT_APP_BACKEND_URL);
+
 
 const TodoApp = () => {
   const dispatch = useDispatch();
