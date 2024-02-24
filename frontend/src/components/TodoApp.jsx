@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTodos ,addTodoAsync, deleteTodo, updateTodo, completeTodo  } from '../redux/actions/todoActions'; // Import the addTodo action creator
 import './TodoApp.css';
+import UpdateTodoModal from './UpdateTodoModal';
 
 const TodoApp = () => {
   const dispatch = useDispatch();
@@ -9,6 +10,8 @@ const TodoApp = () => {
   console.log("Todos: ",todos);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [selectedTodo, setSelectedTodo] = useState(null); // Track the selected todo for updating
+  const [showModal, setShowModal] = useState(false); // State to control the visibility of the modal
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,25 +78,18 @@ const TodoApp = () => {
   };
 
   const handleUpdateTodo = async (id) => {
-    try {
-      // Implement logic to get new name and description from user input, for example using prompt or a form
-      const newName = prompt('Enter new name:');
-      const newDescription = prompt('Enter new description:');
-  
-      if (newName !== null && newDescription !== null) {
-        // Dispatch the UPDATE_TODO action to update the todo
-        dispatch(updateTodo(id, newName, newDescription));
-
-        // After successful updation, re-fetch the todos
-        dispatch(fetchTodos());
-      } else {
-        // Handle empty input or cancelation
-        console.log('Name and description cannot be empty');
-      }
-    } catch (error) {
-      // Handle errors (e.g., display an error message)
-      console.error('Error updating todo:', error.message);
+    // Find the selected todo from the todos array
+    const selected = todos.find(todo => todo._id === id);
+    if (selected) {
+      // Set the selected todo and open the modal
+      setSelectedTodo(selected);
+      setShowModal(true);
     }
+  };
+
+  const handleModalClose = () => {
+    // Close the modal
+    setShowModal(false);
   };
 
  
@@ -122,7 +118,16 @@ const TodoApp = () => {
 ) : (
   <p>No todos</p>
 )}
-
+{/* Render the modal if showModal is true */}
+{showModal && (
+        <UpdateTodoModal
+          id={selectedTodo._id}
+          currentName={selectedTodo.name}
+          currentDescription={selectedTodo.description}
+          onUpdate={updateTodo} // Pass the updateTodo action creator
+          onClose={handleModalClose}
+        />
+      )}
     </div>
   );  
 };

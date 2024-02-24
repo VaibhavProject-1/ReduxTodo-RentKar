@@ -36,25 +36,26 @@ const todoReducer = (state = initialState, action) => {
           todos: [...state.todos, action.payload]
         };
         case DELETE_TODO:
-        const updatedTodosAfterDelete = state.todos.filter(todo => todo.id !== action.payload);
+        const updatedTodosAfterDelete = state.todos.filter(todo => todo._id !== action.payload);
         return {
           ...state,
           todos: [...updatedTodosAfterDelete], // Use spread operator to create a new array
         };
 
-      case UPDATE_TODO:
-        return {
-          ...state,
-          todos: state.todos.map(todo =>
-            todo.id === action.payload.id ? { ...todo, name: action.payload.name, description: action.payload.description } : todo
-          )
-        };
+
+        case UPDATE_TODO:
+      return {
+        ...state,
+        todos: state.todos.map(todo =>
+          todo._id === action.payload._id ? { ...todo, name: action.payload.name, description: action.payload.description } : todo
+        )
+      };
 
       case COMPLETE_TODO:
         return {
           ...state,
           todos: state.todos.map(todo =>
-            todo.id === action.payload ? { ...todo, completed: true } : todo
+            todo._id === action.payload ? { ...todo, completed: true } : todo
           )
         };
     default:

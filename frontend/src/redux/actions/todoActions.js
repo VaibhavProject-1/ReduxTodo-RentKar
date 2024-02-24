@@ -119,6 +119,9 @@ export const deleteTodo = (id) => { // Define async action creator for deleting 
   export const updateTodo = (id, newName, newDescription) => { // Define async action creator for updating a todo
     return async (dispatch) => {
       try {
+        console.log("Updating todo with id:", id);
+        console.log("New name:", newName);
+        console.log("New description:", newDescription);
         // Make an HTTP PATCH request to mark the todo as completed in the backend
         const response = await axios.put(`http://localhost:5000/api/todos/${id}`, { name: newName, description: newDescription });
         
