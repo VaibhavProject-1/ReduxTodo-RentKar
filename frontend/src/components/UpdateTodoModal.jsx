@@ -1,17 +1,41 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateTodo } from '../redux/actions/todoActions';
-import './UpdateTodoModal.css'; // Import CSS file for styling
+import './UpdateTodoModal.css';
+import { useSnackbar } from 'notistack';
 
-const UpdateTodoModal = ({ id, currentName, currentDescription, onClose }) => {
+const UpdateTodoModal = ({ id, currentName, currentDescription, onUpdate, onClose }) => {
   const [name, setName] = useState(currentName);
   const [description, setDescription] = useState(currentDescription);
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleUpdate = () => {
-    dispatch(updateTodo(id, name, description));
-    onClose();
+  const handleUpdate = async () => {
+    try {
+      // Create the updated todo object
+      const updatedTodo = {
+        _id: id,
+        name,
+        description,
+        // Assuming the todo has a completed field
+        completed: false, // You may need to adjust this based on your actual data structure
+      };
+  
+      // Dispatch the updateTodo action with the updated todo object
+      dispatch(updateTodo(id, name, description));
+
+  
+      // Call the onUpdate function with the updated todo
+      onUpdate(updatedTodo);
+  
+      // Close the modal
+      onClose();
+    } catch (error) {
+      console.error('Error updating todo:', error.message);
+      enqueueSnackbar('Error updating todo!', { variant: 'error' });
+    }
   };
+  
 
   return (
     <div className="modal-overlay">

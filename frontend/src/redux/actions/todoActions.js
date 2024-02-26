@@ -1,7 +1,6 @@
 // todoActions.js
 
 import axios from 'axios';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 
 // Action types
 export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';

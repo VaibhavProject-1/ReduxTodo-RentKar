@@ -1,101 +1,97 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTodos ,addTodoAsync, deleteTodo, updateTodo, completeTodo  } from '../redux/actions/todoActions'; // Import the addTodo action creator
+import { fetchTodos, addTodoAsync, deleteTodo, updateTodo, completeTodo } from '../redux/actions/todoActions';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import './TodoApp.css';
 import UpdateTodoModal from './UpdateTodoModal';
-console.log(process.env.REACT_APP_BACKEND_URL);
-
 
 const TodoApp = () => {
   const dispatch = useDispatch();
   const todos = useSelector(state => state.todos.todos);
-  console.log("Todos: ",todos);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedTodo, setSelectedTodo] = useState(null); // Track the selected todo for updating
-  const [showModal, setShowModal] = useState(false); // State to control the visibility of the modal
+  const [selectedTodo, setSelectedTodo] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Dispatch the fetchTodos action
         dispatch(fetchTodos());
-        
       } catch (error) {
-        // Handle any errors that occur during the action dispatch
         console.error('Error dispatching fetchTodos:', error.message);
+        enqueueSnackbar('Error fetching todos!', { variant: 'error' });
       }
     };
-  
-    // Call the fetchData function to initiate the action dispatch
-    fetchData();
-  }, [dispatch]);
-  
-  
 
- 
+    fetchData();
+  }, [dispatch, enqueueSnackbar]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-     // Dispatch the ADD_TODO action to add the todo to the Redux store
-      dispatch(addTodoAsync(name, description));
-      
-      // Reset the form fields
+      await dispatch(addTodoAsync(name, description));
       setName('');
       setDescription('');
+      enqueueSnackbar('Todo added successfully!', { variant: 'success' });
     } catch (error) {
-      // Handle errors (e.g., display an error message)
       console.error('Error adding todo:', error.message);
+      enqueueSnackbar('Error adding todo!', { variant: 'error' });
     }
   };
 
   const handleCompleteTodo = async (id) => {
     try {
-      // Dispatch the UPDATE_TODO action to mark the todo as completed
-      dispatch(completeTodo(id));
-
-      // After successful completion, re-fetch the todos
+      await dispatch(completeTodo(id));
       dispatch(fetchTodos());
-
+      enqueueSnackbar('Todo completed successfully!', { variant: 'success' });
     } catch (error) {
-      // Handle errors (e.g., display an error message)
       console.error('Error completing todo:', error.message);
+      enqueueSnackbar('Error completing todo!', { variant: 'error' });
     }
   };
 
   const handleDeleteTodo = async (id) => {
     try {
-      // Dispatch the DELETE_TODO action to delete the todo
-      dispatch(deleteTodo(id));
-
-      // After successful deletion, re-fetch the todos
+      await dispatch(deleteTodo(id));
       dispatch(fetchTodos());
-
-
+      enqueueSnackbar('Todo deleted successfully!', { variant: 'success' });
     } catch (error) {
-      // Handle errors (e.g., display an error message)
       console.error('Error deleting todo:', error.message);
+      enqueueSnackbar('Error deleting todo!', { variant: 'error' });
     }
   };
 
   const handleUpdateTodo = async (id) => {
-    // Find the selected todo from the todos array
     const selected = todos.find(todo => todo._id === id);
     if (selected) {
-      // Set the selected todo and open the modal
       setSelectedTodo(selected);
-      setShowModal(true);
+      await setShowModal(true); // Wait for the modal to show
     }
   };
+  
 
   const handleModalClose = () => {
-    // Close the modal
     setShowModal(false);
   };
 
- 
-  
+  const handleUpdate = async (updatedTodo) => {
+    try {
+      // Dispatch the updateTodo action with the updated todo object
+      dispatch(updateTodo(updatedTodo));
+      // Fetch the todos again to update the state
+      dispatch(fetchTodos());
+      // Show a success snackbar
+      enqueueSnackbar('Todo updated successfully!', { variant: 'success' });
+      // Close the modal
+      setShowModal(false);
+    } catch (error) {
+      // Show an error snackbar if there was an error
+      console.error('Error updating todo:', error.message);
+      enqueueSnackbar('Error updating todo!', { variant: 'error' });
+    }
+  };
 
   return (
     <div className="todo-app">
@@ -108,30 +104,35 @@ const TodoApp = () => {
         </form>
       </div>
       {Array.isArray(todos) && todos.length > 0 ? (
-  todos.map((todo) => (
-    <div key={todo._id} className={`todo-task ${todo.completed ? 'completed' : ''}`}>
-      <h3>{todo.name}</h3>
-      <p>{todo.description}</p>
-      <button onClick={() => handleCompleteTodo(todo._id)}>Complete</button>
-      <button onClick={() => handleUpdateTodo(todo._id)}>Update</button>
-      <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
-    </div>
-  ))
-) : (
-  <p>No todos</p>
-)}
-{/* Render the modal if showModal is true */}
-{showModal && (
+        todos.map((todo) => (
+          <div key={todo._id} className={`todo-task ${todo.completed ? 'completed' : ''}`}>
+            <h3>{todo.name}</h3>
+            <p>{todo.description}</p>
+            <button onClick={() => handleCompleteTodo(todo._id)}>Complete</button>
+            <button onClick={() => handleUpdateTodo(todo._id)}>Update</button>
+            <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
+          </div>
+        ))
+      ) : (
+        <p>No todos</p>
+      )}
+      {showModal && (
         <UpdateTodoModal
           id={selectedTodo._id}
           currentName={selectedTodo.name}
           currentDescription={selectedTodo.description}
-          onUpdate={updateTodo} // Pass the updateTodo action creator
+          onUpdate={handleUpdate}
           onClose={handleModalClose}
         />
       )}
     </div>
-  );  
+  );
 };
 
-export default TodoApp;
+const AppWithSnackbar = () => (
+  <SnackbarProvider maxSnack={3}>
+    <TodoApp />
+  </SnackbarProvider>
+);
+
+export default AppWithSnackbar;

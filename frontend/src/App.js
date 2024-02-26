@@ -1,5 +1,5 @@
 import React from 'react'
-import TodoApp from './components/TodoApp'
+import AppWithSnackbar from './components/TodoApp'
 
 
 const App = () => {
@@ -7,7 +7,7 @@ const App = () => {
     <>
     <div>
       
-      <TodoApp/>
+      <AppWithSnackbar/>
     </div>
     </>
   )
