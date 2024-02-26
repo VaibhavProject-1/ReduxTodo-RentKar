@@ -5,6 +5,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+    color: #000;
+    background :#000000;
+}
+
+.light-mode {
+  /* Light mode styles */
+  background-color: #333;
+  color: #f4f4f4;
+}
+
+.dark-mode {
+  /* Dark mode styles */
+  background-color: #3e3d3d;
+  color: #333;
 }
 
 code {

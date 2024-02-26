@@ -4,6 +4,7 @@ import { fetchTodos, addTodoAsync, deleteTodo, updateTodo, completeTodo } from '
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import './TodoApp.css';
 import UpdateTodoModal from './UpdateTodoModal';
+import { toggleDarkMode } from '../redux/actions/themeActions';
 
 const TodoApp = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const TodoApp = () => {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const darkMode = useSelector(state => state.theme.darkMode);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,9 +95,15 @@ const TodoApp = () => {
     }
   };
 
+  const handleToggleDarkMode = () => {
+    dispatch(toggleDarkMode()); // Dispatch the action to toggle dark mode
+  };
+
   return (
-    <div className="todo-app">
-      <h2>My Todos</h2>
+    <div className={`todo-app ${darkMode ? 'dark-mode' : ''}`}>
+      <div className='Header'><h2>My Todos</h2><button className="theme-toggle-btn" onClick={handleToggleDarkMode}>
+        {darkMode ? '🌞' : '🌜'}
+      </button></div>
       <div className="add-todo">
         <form onSubmit={handleSubmit}>
           <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -130,7 +138,7 @@ const TodoApp = () => {
 };
 
 const AppWithSnackbar = () => (
-  <SnackbarProvider maxSnack={3}>
+  <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
     <TodoApp />
   </SnackbarProvider>
 );

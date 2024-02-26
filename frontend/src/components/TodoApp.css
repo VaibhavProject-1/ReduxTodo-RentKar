@@ -1,6 +1,6 @@
 .todo-app {
-  background-color: #f4f4f4;
-  color: #333;
+  background: linear-gradient(135deg, #fd7e14, #04a7c7); /* Gradient from orange (#fd7e14) to blue (#04a7c7) */
+  color: #000000; /* Light mode text color */
   font-family: Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -8,12 +8,23 @@
   height: 100%;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .add-todo {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+}
+
+.Header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.Header h2 {
+  margin: 10px;
 }
 
 .add-todo input,
@@ -46,7 +57,7 @@
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .todo-task:hover {
@@ -96,6 +107,12 @@
   text-decoration: line-through;
 }
 
+.theme-toggle-btn{
+  margin-left: 400px;
+  height: 40px;
+  margin-top: 10px;
+}
+
 @media (max-width: 600px) {
   .add-todo input,
   .add-todo button {
@@ -110,4 +127,64 @@
   .todo-task p {
     font-size: 12px;
   }
+
+  .Header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .Header h2 {
+    margin-bottom: 10px;
+  }
+
+  .theme-toggle-btn {
+    margin-left: 0; /* Reset margin for smaller screens */
+    margin-top: 0; /* Reset margin for smaller screens */
+  }
+
 }
+
+/* Dark mode styles */
+.dark-mode .todo-app {
+  background: linear-gradient(135deg, #ff0033, #0000ff); /* Gradient from red (#ff0033) to blue (#0000ff) */
+  color: #000000;
+}
+
+.dark-mode .add-todo input,
+.dark-mode .add-todo button {
+  background-color: #81e615; /* Light Green */
+  color: #000000; /* Dark Gray */
+  border-color: #81e615; /* Light Green */
+}
+
+.dark-mode .add-todo button:hover {
+  background-color: #73d90f; /* Darker Green */
+}
+
+.dark-mode .todo-task {
+  background: linear-gradient(135deg, #ff0033, #0000ff); /* Gradient from red (#ff0033) to blue (#0000ff) */
+  color: #0d0d0d;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .todo-task p {
+  color: #151515; /* Light Gray */
+}
+
+.dark-mode .todo-task:hover {
+  transform: translateY(-3px);
+}
+
+.dark-mode .todo-task button {
+  background-color: #e6ae15; /* Gold */
+  color: #333; /* Dark Gray */
+}
+
+.dark-mode .todo-task button:hover {
+  background-color: #d19c13; /* Darker Gold */
+}
+
+.dark-mode .completed {
+  color: #babcbd; /* Gray */
+}
+

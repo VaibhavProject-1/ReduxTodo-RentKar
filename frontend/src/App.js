@@ -5,7 +5,7 @@ import AppWithSnackbar from './components/TodoApp'
 const App = () => {
   return (
     <>
-    <div>
+    <div className="body">
       
       <AppWithSnackbar/>
     </div>
