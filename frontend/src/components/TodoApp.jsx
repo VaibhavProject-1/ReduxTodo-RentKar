@@ -116,8 +116,8 @@ const TodoApp = () => {
           <div key={todo._id} className={`todo-task ${todo.completed ? 'completed' : ''}`}>
             <h3>{todo.name}</h3>
             <p>{todo.description}</p>
-            <button onClick={() => handleCompleteTodo(todo._id)}>Complete</button>
-            <button onClick={() => handleUpdateTodo(todo._id)}>Update</button>
+            <button className="complete-button" onClick={() => handleCompleteTodo(todo._id)}>Complete</button>
+            <button className="update-button" onClick={() => handleUpdateTodo(todo._id)}>Update</button>
             <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
           </div>
         ))

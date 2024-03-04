@@ -1,6 +1,6 @@
 .todo-app {
-  background: linear-gradient(135deg, #fd7e14, #04a7c7); /* Gradient from orange (#fd7e14) to blue (#04a7c7) */
-  color: #000000; /* Light mode text color */
+  background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1124&q=100');
+  color: #1e272e;
   font-family: Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -39,14 +39,14 @@
 }
 
 .add-todo button {
-  background-color: #00a0d2;
-  color: white;
+  background-color: #0fbcf9;
+  color: #1e272e;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .add-todo button:hover {
-  background-color: #0077b6;
+  background-color: #0a3d62;
 }
 
 .todo-task {
@@ -54,10 +54,11 @@
   flex-direction: column;
   margin-bottom: 10px;
   padding: 15px;
-  background-color: #fff;
+  background-color: #f1f2f6;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0.9;
 }
 
 .todo-task:hover {
@@ -85,22 +86,43 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* CSS for the 'complete' button */
+.todo-task .complete-button {
+  background-color: #2ecc72; /* Emerald */
+  color: #1e272e; /* Dark Gray */
+}
+
+.todo-task .complete-button:hover {
+  background-color: #27ae60; /* Nephritis */
+}
+
+/* CSS for the 'update' button */
+.todo-task .update-button {
+  background-color: #3498db; /* Peter river */
+  color: #1e272e; /* Dark Gray */
+}
+
+.todo-task .update-button:hover {
+  background-color: #2980b9; /* Belize hole */
+}
+
+
 .todo-task button:first-child {
-  background-color: #00c851;
-  color: white;
+  background-color: #2ecc72;
+  color: #1e272e;
 }
 
 .todo-task button:first-child:hover {
-  background-color: #009624;
+  background-color: #27ae60;
 }
 
 .todo-task button:last-child {
-  background-color: #ff4444;
-  color: white;
+  background-color: #e74c3c;
+  color: #1e272e;
 }
 
 .todo-task button:last-child:hover {
-  background-color: #cc0000;
+  background-color: #c0392b;
 }
 
 .completed {
@@ -138,53 +160,61 @@
   }
 
   .theme-toggle-btn {
-    margin-left: 0; /* Reset margin for smaller screens */
-    margin-top: 0; /* Reset margin for smaller screens */
+    margin-left: 0;
+    margin-top: 0;
   }
-
 }
 
-/* Dark mode styles */
+.dark-mode {
+  --primary-color: #0d1117; /* Deep Blue */
+  --secondary-color: #161b22; /* Dark Gray */
+  --text-color: #ffffff; /* White */
+  --button-color: #238636; /* Green */
+  --button-hover-color: #2ea043; /* Light Green */
+  --task-bg-color: var(--primary-color);
+  --task-text-color: var(--text-color);
+  --task-button-color: #d6dc1a; /* Red */
+  --task-button-hover-color: #d22828; /* Bright Red */
+  --completed-color: #f1c40f; /* Sunflower Yellow */
+}
+
+
 .dark-mode .todo-app {
-  background: linear-gradient(135deg, #ff0033, #0000ff); /* Gradient from red (#ff0033) to blue (#0000ff) */
-  color: #000000;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.dark-mode .todo-task {
+  background-color: var(--task-bg-color);
+  color: var(--task-text-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .add-todo input,
 .dark-mode .add-todo button {
-  background-color: #81e615; /* Light Green */
-  color: #000000; /* Dark Gray */
-  border-color: #81e615; /* Light Green */
+  background-color: var(--button-color);
+  color: var(--text-color);
+  border-color: var(--button-color);
 }
 
 .dark-mode .add-todo button:hover {
-  background-color: #73d90f; /* Darker Green */
-}
-
-.dark-mode .todo-task {
-  background: linear-gradient(135deg, #ff0033, #0000ff); /* Gradient from red (#ff0033) to blue (#0000ff) */
-  color: #0d0d0d;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  background-color: var(--button-hover-color);
 }
 
 .dark-mode .todo-task p {
-  color: #151515; /* Light Gray */
-}
-
-.dark-mode .todo-task:hover {
-  transform: translateY(-3px);
+  color: var(--completed-color);
 }
 
 .dark-mode .todo-task button {
-  background-color: #e6ae15; /* Gold */
-  color: #333; /* Dark Gray */
+  background-color: var(--task-button-color);
+  color: var(--text-color);
 }
 
+
 .dark-mode .todo-task button:hover {
-  background-color: #d19c13; /* Darker Gold */
+  background-color: var(--task-button-hover-color);
 }
 
 .dark-mode .completed {
-  color: #babcbd; /* Gray */
+  color: var(--completed-color);
 }
-
